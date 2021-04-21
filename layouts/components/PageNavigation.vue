@@ -149,7 +149,7 @@
                 <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline m-r-5 text-muted"></i> Lock
                   screen</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><i class="mdi mdi-logout m-r-5 text-muted"></i> Logout</a>
+                <a class="dropdown-item" v-on:click="doLogout" style="cursor: pointer"><i class="mdi mdi-logout m-r-5 text-muted"></i> Logout</a>
               </div>
             </li>
             <li class="menu-item list-inline-item">
@@ -191,6 +191,32 @@ export default {
 
   components: {
     PageMenu
+  },
+
+  methods: {
+    doLogout: function() {
+      this.$swal({
+          title: "Anda akan keluar dari E-Belajar",
+          text: "Lanjut?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((value) => {
+          if (value) {
+
+
+            this.$store.dispatch('logout')
+                  .then(() => {
+                    this.$toast.success('Successfully logged out. Redirecting to Login Page')
+                    window.location.href = "/auth/login"
+                  })
+
+          } else {
+            this.$toastr.info("Canceled")
+          }
+        })
+    },
   }
 }
 </script>

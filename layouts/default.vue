@@ -1,29 +1,18 @@
 <template>
   <div>
-    
-    <div v-if="isLoggedIn">
-        <!-- <LoginPage /> -->
+    <PageNavigation />
+    <div class="wrapper">
+    <div class="container-fluid">
+        <Nuxt />
     </div>
-    <div v-else>
-        <!-- <div id="preloader">
-            <div id="status">
-                <div class="spinner"></div>
-            </div>
-        </div> -->
-        <PageNavigation />
-        <div class="wrapper">
-        <div class="container-fluid">
-            <Nuxt />
-        </div>
-        </div>
-        <PageFooter />
     </div>
+    <PageFooter />
   </div>
 </template>
 
 <script>
 
-// import LoginPage from '~~/pages/auth/login'
+import LoginPage from '~~/pages/auth/login'
 
 import PageNavigation from '~~/layouts/components/PageNavigation'
 import PageFooter from '~~/layouts/components/PageFooter'
@@ -31,15 +20,17 @@ import PageFooter from '~~/layouts/components/PageFooter'
 export default {
 
     name: 'layout',
+    
+    middleware: 'authenticated',
 
     components: {
-        // LoginPage,
+        LoginPage,
         PageNavigation, PageFooter
     },
 
     computed: {
         isLoggedIn: function() {
-            return false
+            return this.$store.getters.isLoggedIn
         }
     }
 }

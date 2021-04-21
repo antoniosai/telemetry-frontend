@@ -1,7 +1,7 @@
 export default {
   loading: {
     color: 'blue',
-    height: '15px'
+    height: '10px'
   },
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -26,6 +26,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     // 
+    '~/plugins/route',
     '~/plugins/api',
     '~/plugins/axios'
   ],
@@ -41,6 +42,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     'vue-sweetalert2/nuxt',
+    '@nuxtjs/toast',
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
@@ -49,6 +51,17 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: 'http://localhost:8000',
+  },
+
+  router: {
+    base: '/',
+    extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'custom',
+        path: '*',
+        component: resolve(__dirname, 'pages/404.vue')
+      })
+    }
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

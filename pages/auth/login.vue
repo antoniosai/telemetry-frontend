@@ -73,6 +73,17 @@ export default {
         }
     }),
 
+    computed: {
+        isLoggedIn: function() {
+            return this.$store.getters.isLoggedIn
+        }
+    },
+
+    mounted() {
+        if(this.isLoggedIn) {
+            window.location = '/'
+        }
+    },
 
     methods: {
         async doLogin() {
@@ -88,7 +99,7 @@ export default {
                     {
                         this.$swal(res.data.message, "Selamat Datang");
 
-                        // window.location = '/'
+                        window.location = '/'
                     }
                     else
                     {

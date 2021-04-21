@@ -77,7 +77,7 @@ export const actions = {
         return new Promise((resolve, reject) => {
             commit('logout')
 
-            this.$axios.post('/api/auth/logout')
+            this.$axios.post('/auth/logout')
             localStorage.removeItem('token')
             localStorage.removeItem('user')
             delete this.$axios.defaults.headers.common['Authorization']
