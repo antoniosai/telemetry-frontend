@@ -64,10 +64,7 @@ export default {
     
     data: () => ({
         form: {
-            grant_type: 'password',
-            client_id: 1,
-            client_secret: 'FC8GACiKVBtZnbXUI1ZYAHh2vQjVyFjoUocVKdG1',
-            scope: '*',
+
             // username: '',
             // password: ''
             username: 'antoniosai',
@@ -82,9 +79,9 @@ export default {
     },
 
     mounted() {
-        if(this.isLoggedIn) {
-            window.location = '/'
-        }
+        // if(this.isLoggedIn) {
+        //     window.location = '/'
+        // }
     },
 
     methods: {

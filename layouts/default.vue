@@ -21,7 +21,6 @@ export default {
 
     name: 'layout',
     
-    middleware: 'authenticated',
 
     components: {
         LoginPage,

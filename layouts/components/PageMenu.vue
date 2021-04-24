@@ -10,7 +10,7 @@
                     </li>
 
                     <li class="has-submenu ">
-                        <NuxtLink to="/admin/clients/"><i class="mdi mdi-account"></i>Client Area</NuxtLink>
+                        <NuxtLink to="/admin/clients"><i class="mdi mdi-account"></i>Client Area</NuxtLink>
                     </li>
 
                     <li class="has-submenu">
@@ -18,7 +18,7 @@
                         <ul class="submenu megamenu">
                             <li>
                                 <ul>
-                                    <li><NuxtLink to="/admin/devices/">Device List</NuxtLink></li>
+                                    <li><NuxtLink to="/admin/devices/list">Device List</NuxtLink></li>
                                     <li><a href="ui-cards.html">Category</a></li>
                                     <li><a href="ui-tabs-accordions.html">Owner</a></li>
                                 </ul>
