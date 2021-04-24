@@ -99,7 +99,7 @@ export default {
                 .then(res => {
                     if (res.data.status == 1) {
                         this.$swal(res.data.message, "Welcome");
-                        // window.location = '/'
+                        window.location = '/'
                     } else if (res.data.status == 0) {
                         this.$swal({
                             title: "Something Wrong",

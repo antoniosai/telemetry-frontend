@@ -81,7 +81,7 @@ export const actions = {
             commit('logout')
 
             this.$axios.post('/auth/logout')
-            localStorage.removeItem('token')
+            localStorage.removeItem('access_token')
             localStorage.removeItem('user')
             delete this.$axios.defaults.headers.common['Authorization']
             resolve()
