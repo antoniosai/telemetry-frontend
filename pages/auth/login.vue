@@ -11,7 +11,7 @@
                     </div>
 
                     <div class="px-3 pb-3">
-                        <form class="form-horizontal m-t-20" @submit.prevent="userLogin">
+                        <form class="form-horizontal m-t-20" @submit.prevent="doLogin">
 
                             <div class="form-group row">
                                 <div class="col-12">
@@ -68,8 +68,10 @@ export default {
             client_id: 1,
             client_secret: 'FC8GACiKVBtZnbXUI1ZYAHh2vQjVyFjoUocVKdG1',
             scope: '*',
-            username: '',
-            password: ''
+            // username: '',
+            // password: ''
+            username: 'antoniosai',
+            password: 'd0nthide!@#'
         }
     }),
 
@@ -87,15 +89,6 @@ export default {
 
     methods: {
 
-        async userLogin() {
-            try {
-                let response = await this.$auth.loginWith('larave_passport', { data: this.form })
-                console.log(response)
-            } catch (err) {
-                console.log(err)
-            }
-        },
-
         async doLogin() {
             if (this.form.username == '') {
                 alert('Username can\'t be empty')
@@ -104,40 +97,19 @@ export default {
             } else {
                 this.$store.dispatch('login', this.form)
                 .then(res => {
-
-                    if(res.status == 200)
-                    {
+                    if (res.data.status == 1) {
+                        this.$swal(res.data.message, "Welcome");
+                        // window.location = '/'
+                    } else if (res.data.status == 0) {
                         this.$swal({
-                            icon: 'success',
-                            title: res.data.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-
-                        window.location = '/'
-                    }
-                    else
-                    {
-                        console.log('something wrong')
-                        this.$swal({
-                            title: "Gagal Masuk",
-                            text: "Terjadi Kesalahan",
+                            title: "Something Wrong",
+                            text: res.data.message,
                             icon: "warning",
                             button: "Ok",
                         })
                     }
-
-
                 })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                        return false
-                    }
-                })
-
+                .catch(err => {})
             }
         },
     }
