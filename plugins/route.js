@@ -35,7 +35,7 @@ export default ({ app }) => {
                    errorResponseHandler
                 )
                 
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('access_token');
                 if (!token) {
                     app.store.dispatch('logout')
                     .then(() => {
