@@ -26,8 +26,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     // 
+    { src: '~/plugins/vue-good-table', ssr: false },
     '~/plugins/route',
-    '~/plugins/api',
     '~/plugins/axios'
   ],
 
@@ -36,11 +36,19 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    ['@nuxtjs/moment', { /* module options */ }],
+    '@nuxtjs/auth-next'
   ],
+
+  moment: {
+    defaultLocale: 'id',
+    locales: ['id']
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
+    'nuxt-i18n',
     'vue-sweetalert2/nuxt',
     '@nuxtjs/toast',
     '@nuxtjs/axios',
@@ -54,6 +62,18 @@ export default {
   },
 
   router: {
+    // middleware: ['auth'],
+    // strategies: {
+    //   larave_passport: {
+    //     provider: 'laravel/passport',
+    //     endpoints: {
+    //       userInfo: '/auth/detail'
+    //     },
+    //     url: '...',
+    //     clientId: '...',
+    //     clientSecret: '...'
+    //   },
+    // },
     base: '/',
     extendRoutes(routes, resolve) {
       routes.push({

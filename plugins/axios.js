@@ -4,12 +4,14 @@ export default function ({
   $swal,
   redirect
 }) {
+
+  let token = localStorage.getItem('token')
+      
   $axios.onRequest(config => {
-    console.log('Making request to ' + config.url)
-  })
+    config.headers.common['Authorization'] = `Bearer ${token}`;
+  });
 
   $axios.onError(error => {
-    console.log(error)
     const code = parseInt(error.response && error.response.status)
     if (code === 400) {
       $swal({
@@ -23,14 +25,16 @@ export default function ({
 
     if (code === 401) {
 
-      // store.dispatch('logout')
-      // .then(() => {
-      //     window.location.href = "/login"
-      // })
+      console.log(error.response)
 
-      // setTimeout(function(){ window.location = '/'; }, 3000);
-        
-        
+      $swal({
+        icon: 'error',
+        title: 'Oops...',
+        text: "You are not allowed to This Page",
+
+      })
+      window.location = '/auth/login'
+
     }
   })
 }

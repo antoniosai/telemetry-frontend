@@ -11,17 +11,17 @@
                     </div>
 
                     <div class="px-3 pb-3">
-                        <form class="form-horizontal m-t-20" @submit.prevent="doLogin">
+                        <form class="form-horizontal m-t-20" @submit.prevent="userLogin">
 
                             <div class="form-group row">
                                 <div class="col-12">
-                                    <input class="form-control" v-model="form.username" type="text" required="" placeholder="Username">
+                                    <input class="form-control" v-model="form.username" type="text" required autocomplete="username" placeholder="Username">
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <div class="col-12">
-                                    <input class="form-control" v-model="form.password" type="password" required="" placeholder="Password">
+                                    <input class="form-control" v-model="form.password" type="password" required autocomplete="current-password" placeholder="Password">
                                 </div>
                             </div>
 
@@ -86,6 +86,16 @@ export default {
     },
 
     methods: {
+
+        async userLogin() {
+            try {
+                let response = await this.$auth.loginWith('larave_passport', { data: this.form })
+                console.log(response)
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
         async doLogin() {
             if (this.form.username == '') {
                 alert('Username can\'t be empty')
@@ -97,7 +107,12 @@ export default {
 
                     if(res.status == 200)
                     {
-                        this.$swal(res.data.message, "Selamat Datang");
+                        this.$swal({
+                            icon: 'success',
+                            title: res.data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
 
                         window.location = '/'
                     }

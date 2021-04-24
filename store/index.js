@@ -37,7 +37,7 @@ export const actions = {
     }, user) {
         return new Promise((resolve, reject) => {
             commit('auth_request')
-            this.$axios.post('/v1/oauth/token', user)
+            this.$axios.post('/oauth/token', user)
             .then(res => {
 
                 if (res.status == 200)
