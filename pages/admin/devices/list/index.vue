@@ -16,20 +16,6 @@
             </template>
         </PageHeader>
 
-        <div
-            v-if="
-            (filters.searchTerm != null) ||
-            (filters.searchTerm == '') ||
-            (filters.status != null) ||
-            (filters.province != null) ||
-            (filters.regency != null) ||
-            (filters.district != null)
-        "
-        >
-            <h4>Applied Filter(s)</h4>
-            Search Query: {{ filters.searchTerm }}
-        </div>
-
         <div class="row">
             <div
                 v-bind:class="{
@@ -140,10 +126,54 @@
                 <infinite-loading ref="InfiniteLoading" @infinite="infiniteHandler"></infinite-loading>
             </div>
             <div class="col-md-3" v-if="open_filter">
+                <div
+                    v-if="
+                        (filters.searchTerm != null) ||
+                        (filters.searchTerm == '') ||
+                        (filters.status != null) ||
+                        (filters.province != null) ||
+                        (filters.regency != null) ||
+                        (filters.district != null)
+                    "
+                    class="card mb-3"
+                >
+                    <div class="card-header bg-primary text-white">Applied Filter(s)</div>
+                    <div class="card-body">
+                        <div v-if="filters.searchTerm" class="mb-3">
+                            Search Query:
+                            <span class="badge badge-area badge-primary">
+                                <strong>{{ filters.searchTerm }}</strong>
+                            </span>
+                        </div>
+                        <div v-if="filters.status" class="mb-2">
+                            Status:
+                            <span class="badge badge-area badge-primary">{{ filters.status }}</span>
+                        </div>
+                        <div v-if="filters.province" class="mb-2">
+                            Prov.
+                            <span
+                                class="badge badge-area badge-primary"
+                            >{{ filters.province.name }}</span>
+                        </div>
+                        <div v-if="filters.regency" class="mb-2">
+                            Kota
+                            <span
+                                class="badge badge-area badge-success"
+                            >{{ filters.regency.name }}</span>
+                        </div>
+                        <div v-if="filters.district" class="mb-2">
+                            Kec.
+                            <span
+                                class="badge badge-area badge-success"
+                            >{{ filters.district.name }}</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="card card-shadow">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="card-title font-20 mt-0">Filter</h4>
-                        <p class="font-14 mb-0">Search for specific Data.</p>
+                        <h5 class="card-title font-20 mt-0 mb-0">
+                            <i class="fa fa-search"></i> Filter
+                        </h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -374,9 +404,12 @@ export default {
         },
 
         triggerFilter: function () {
-            this.open_filter
-                ? (this.open_filter = false)
-                : (this.open_filter = true);
+            if (this.open_filter) {
+                this.open_filter = false;
+                this.resetFilter();
+            } else {
+                this.open_filter = true;
+            }
         },
 
         submitFilter: function () {
@@ -464,6 +497,10 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
+.badge-area {
+    font-size: 12px;
+}
+
 .card-custom {
     overflow: hidden;
     min-height: 450px;
