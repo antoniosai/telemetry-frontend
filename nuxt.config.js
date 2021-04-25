@@ -60,6 +60,20 @@ export default {
     baseURL: 'http://localhost:8000',
   },
 
+  toast: {
+    duration: 5000,
+    register: [ // Register custom toasts
+      {
+        name: 'my-error',
+        message: 'Oops...Something went wrong',
+        options: {
+          type: 'error'
+        }
+      }
+    ]
+},
+
+
   router: {
     // middleware: ['auth'],
     // strategies: {

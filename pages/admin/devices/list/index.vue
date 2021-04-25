@@ -10,7 +10,7 @@
                     <i class="fa fa-filter"></i>
                     {{ open_filter ? 'Close Filter' : 'Open Filter' }}
                 </button>
-                <NuxtLink to="/admin/devices/list/register" class="btn btn-primary">
+                <NuxtLink to="/admin/devices/register" class="btn btn-primary">
                     <i class="fa fa-plus"></i> Register New Devices
                 </NuxtLink>
             </template>
