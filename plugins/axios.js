@@ -33,7 +33,7 @@ export default function ({
         text: "You are not allowed to This Page",
 
       })
-      // window.location = '/auth/login'
+      window.location = '/auth/login'
 
     }
   })

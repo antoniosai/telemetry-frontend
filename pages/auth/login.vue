@@ -65,10 +65,8 @@ export default {
     data: () => ({
         form: {
 
-            // username: '',
-            // password: ''
-            username: 'antoniosai',
-            password: 'd0nthide!@#'
+            username: '',
+            password: ''
         }
     }),
 

@@ -45,7 +45,7 @@ export default {
 
     loading: true,
 
-	name: 'ClientsDetail',
+	name: 'admin-clients-detail',
 
     components: {
         PageHeader,

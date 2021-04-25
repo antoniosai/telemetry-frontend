@@ -9,7 +9,7 @@
 
 export default {
 
-    name: 'layout',
+    name: 'auth-layout',
 
     components: {
     },

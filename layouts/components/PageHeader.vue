@@ -31,7 +31,7 @@ export default {
 
     props: ['title', 'sub_title', 'breadcrumb_arr'],
 
-    name: 'PageHeader'
+    name: 'page-header'
 }
 </script>
 

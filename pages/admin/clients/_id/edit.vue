@@ -13,7 +13,7 @@
                         
                         <div class="form-group">
                             <label for="phone_number"><span style="color: red; font-weight: bold">*)</span> Full Name</label>
-                            <input type="text" v-model="form.name" required class="form-control" v-bind:class="{ 'parsley-error': errors.name }">
+                            <input type="text" v-model="client.name" required class="form-control" v-bind:class="{ 'parsley-error': errors.name }">
                             <ul class="parsley-errors-list filled" id="parsley-id-9" v-if="errors.name">
                                 <li class="parsley-required" v-for="(err, index) in errors.name" :key="index">{{ err }}</li>
                             </ul>
@@ -21,7 +21,7 @@
 
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" v-model="form.phone_number" disabled class="form-control">
+                            <input type="text" v-model="client.user.username" class="form-control">
                             
                         </div>
 
@@ -29,7 +29,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="phone_number"><span style="color: red; font-weight: bold">*)</span> Phone Number</label>
-                                    <input type="text" v-model="form.phone_number" v-bind:class="{ 'parsley-error': errors.phone_number }" required class="form-control">
+                                    <input type="text" v-model="client.phone_number" v-bind:class="{ 'parsley-error': errors.phone_number }" required class="form-control">
                                     <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.phone_number }" v-if="errors.name">
                                         <li class="parsley-required" v-for="(err, index) in errors.phone_number" :key="index">{{ err }}</li>
                                     </ul>
@@ -38,7 +38,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email">E-Mail Address</label>
-                                    <input type="email" v-model="form.email" required class="form-control" v-bind:class="{ 'parsley-error': errors.phone_number }">
+                                    <input type="email" v-model="client.email" required class="form-control" v-bind:class="{ 'parsley-error': errors.phone_number }">
                                     <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.phone_number }" v-if="errors.name">
                                         <li class="parsley-required" v-for="(err, index) in errors.email" :key="index">{{ err }}</li>
                                     </ul>
@@ -50,7 +50,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="password"><span style="color: red; font-weight: bold">*)</span> Password</label>
-                                    <input type="text" v-model="form.password" required class="form-control" v-bind:class="{ 'parsley-error': errors.password }">
+                                    <input type="text" v-model="client.password" required class="form-control" v-bind:class="{ 'parsley-error': errors.password }">
                                     <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.password }" v-if="errors.name">
                                         <li class="parsley-required" v-for="(err, index) in errors.password" :key="index">{{ err }}</li>
                                     </ul>
@@ -59,7 +59,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="password_confirmation"><span style="color: red; font-weight: bold">*)</span> Password Confirmation</label>
-                                    <input type="email" v-model="form.password_confirmation" required class="form-control" v-bind:class="{ 'parsley-error': errors.password_confirmation }">
+                                    <input type="email" v-model="client.password_confirmation" required class="form-control" v-bind:class="{ 'parsley-error': errors.password_confirmation }">
                                     <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.password }" v-if="errors.name">
                                         <li class="parsley-required" v-for="(err, index) in errors.password" :key="index">{{ err }}</li>
                                     </ul>
@@ -79,48 +79,81 @@
 
                         <div class="form-group">
                             <label for="province">Province</label>
-                            <select v-model="form.province" class="form-control" @change="selectProvince" v-bind:class="{ 'parsley-error': errors.province }">
-                                <option v-for="province in area.provinces" :key="province.id" :value="province">{{ province.name }}</option>
-                            </select>
-                            <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.province }" v-if="errors.province">
-                                <li class="parsley-required" v-for="(err, index) in errors.province" :key="index">{{ err }}</li>
-                            </ul>
+                            <div v-if="edit_area">
+                                <select v-model="client.province" class="form-control" @change="selectProvince" v-bind:class="{ 'parsley-error': errors.province }">
+                                    <option v-for="province in area.provinces" :key="province.id" :value="province">{{ province.name }}</option>
+                                </select>
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.province }" v-if="errors.province">
+                                    <li class="parsley-required" v-for="(err, index) in errors.province" :key="index">{{ err }}</li>
+                                </ul>
+                            </div>
+                            <div style="color: grey" v-else>
+                                {{ client.province ? client.province.name : 'Not Set' }}
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="regency">Regency</label>
-                            <select v-model="form.regency" class="form-control" @change="selectRegency" v-bind:class="{ 'parsley-error': errors.regency }" >
-                                <option v-for="regency in area.regencies" :key="regency.id" :value="regency">{{ regency.name }}</option>
-                            </select>
-                            <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.regency }" v-if="errors.regency">
-                                <li class="parsley-required" v-for="(err, index) in errors.regency" :key="index">{{ err }}</li>
-                            </ul>
+                            <div v-if="edit_area">
+                                <select v-model="client.regency" class="form-control" @change="selectRegency" v-bind:class="{ 'parsley-error': errors.regency }" >
+                                    <option v-for="regency in area.regencies" :key="regency.id" :value="regency">{{ regency.name }}</option>
+                                </select>
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.regency }" v-if="errors.regency">
+                                    <li class="parsley-required" v-for="(err, index) in errors.regency" :key="index">{{ err }}</li>
+                                </ul>
+                            </div>
+                            <div style="color: grey" v-else>
+                                {{ client.regency ? client.regency.name : 'Not Set' }}
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="district">District</label>
-                            <select v-model="form.district" class="form-control" v-bind:class="{ 'parsley-error': errors.district }" >
-                                <option v-for="district in area.districts" :key="district.id" :value="district">{{ district.name }}</option>
-                            </select>
-                            <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.district }" v-if="errors.district">
-                                <li class="parsley-required" v-for="(err, index) in errors.district" :key="index">{{ err }}</li>
-                            </ul>
+                            <div v-if="edit_area">
+                                <select v-model="client.district" class="form-control" v-bind:class="{ 'parsley-error': errors.district }" >
+                                    <option v-for="district in area.districts" :key="district.id" :value="district">{{ district.name }}</option>
+                                </select>
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.district }" v-if="errors.district">
+                                    <li class="parsley-required" v-for="(err, index) in errors.district" :key="index">{{ err }}</li>
+                                </ul>
+                            </div>
+                            <div style="color: grey" v-else>
+                                {{ client.district ? client.district.name : 'Not Set' }}
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="address">Address</label>
-                            <textarea v-model="form.address" rows="4" class="form-control" v-bind:class="{ 'parsley-error': errors.address }" ></textarea>
-                            <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.address }" v-if="errors.address">
-                                <li class="parsley-required" v-for="(err, index) in errors.address" :key="index">{{ err }}</li>
-                            </ul>
+                            <div v-if="edit_area">
+                                <textarea v-model="client.address" rows="4" class="form-control" v-bind:class="{ 'parsley-error': errors.address }" ></textarea>
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.address }" v-if="errors.address">
+                                    <li class="parsley-required" v-for="(err, index) in errors.address" :key="index">{{ err }}</li>
+                                </ul>
+                            </div>
+                            <div style="color: grey" v-else>
+                                {{ client.address ? client.address : 'Not Set' }}
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="zip_code">ZIP Code</label>
-                            <input name="zip_code" v-model="form.zip_code" class="form-control" v-bind:class="{ 'parsley-error': errors.zip_code }" />
-                            <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.zip_code }" v-if="errors.zip_code">
-                                <li class="parsley-required" v-for="(err, index) in errors.zip_code" :key="index">{{ err }}</li>
-                            </ul>
+                            
+                            <div v-if="edit_area">
+                                <input name="zip_code" v-model="client.zip_code" class="form-control" v-bind:class="{ 'parsley-error': errors.zip_code }" />
+                                <ul class="parsley-errors-list filled" id="parsley-id-9" v-bind:class="{ 'parsley-error': errors.zip_code }" v-if="errors.zip_code">
+                                    <li class="parsley-required" v-for="(err, index) in errors.zip_code" :key="index">{{ err }}</li>
+                                </ul>
+                            </div>
+                            <div style="color: grey" v-else>
+                                {{ client.zip_code ? client.zip_code : 'Not Set' }}
+                            </div>
+                        </div>
+
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <button v-if="edit_area == false" class="btn btn-primary" v-on:click="editArea"><i class="fa fa-cog"></i> Edit Address Detail</button>
+                                <button v-else class="btn btn-primary" v-on:click="editArea"><i class="fa fa-save"></i> Finish Editing Detail</button>
+                            </div>
                         </div>
 
                     </div>
@@ -133,7 +166,7 @@
                     <ul style="margin-left: -20px">
                         <li>Form with tag <span style="color: red; font-weight: bold"> *)</span> is required / cannot be blank</li>
                         <li>Please make sure form filled correctly</li>
-                        <li>Phone Number will be used as Username</li>
+                        <li>Dont fill form Password & Password Confirmation if you don't want to change it</li>
                     </ul>
                 </div>
 
@@ -153,7 +186,7 @@ export default {
 
     loading: true,
 
-	name: 'admin-clients-add',
+	name: 'admin-clients-edit',
 
     components: {
         PageHeader,
@@ -175,9 +208,10 @@ export default {
 
         errors: {},
 
-        form: {
+        edit_area: false,
+
+        client: {
             name: null,
-            username: null,
             phone_number: null,
             email: null,
             password: null,
@@ -189,21 +223,42 @@ export default {
             province: null,
             regency: null,
             district: null,
+
+            user: {
+                username: ''
+            }
         }
     }),
     
     mounted() {
+        this.initData()
         this.getProvinces()
     },
 
     methods: {
-        getProvinces: function() {
-            this.$axios.get('https://kcd.e-belajar.id/api/area/province')
+
+        initData: function() {
+            this.$axios.get('/admin_area/clients/' + this.$route.params.id)
             .then( res => {
                 if(res.data.status == 1) {
-                    this.area.provinces = res.data.data
+                    this.client = res.data.data
+
+                    this.client.province = JSON.parse(res.data.data.province)
+                    this.client.regency = JSON.parse(res.data.data.regency)
+                    this.client.district = JSON.parse(res.data.data.district)
+
+                    this.selectProvince()
+                    this.selectRegency()
                 }
             })
+        },
+
+        editArea: function() {
+            if(this.edit_area) {
+                this.edit_area = false
+            } else {
+                this.edit_area = true
+            }
         },
 
         saveData: function() {
@@ -217,7 +272,7 @@ export default {
             })
             .then((value) => {
                 if (value) {
-                    this.$axios.post('/admin_area/clients', this.form)
+                    this.$axios.put('/admin_area/clients/' + this.$route.params.id, this.client)
                     .then( res => {
                         if(res.data.status == 1) {
                             this.$swal({
@@ -258,43 +313,58 @@ export default {
                 retVal += charset.charAt(Math.floor(Math.random() * n));
             }
             
-            this.form.password = retVal
-            this.form.password_confirmation = retVal
+            this.client.password = retVal
+            this.client.password_confirmation = retVal
             return retVal;
+        },
+
+        getProvinces: function() {
+            this.$axios.get('https://kcd.e-belajar.id/api/area/province')
+            .then( res => {
+                if(res.data.status == 1) {
+                    this.area.provinces = res.data.data
+                }
+            })
         },
 
         selectProvince: function() {
             // Empty Address Form
-            this.form.regency = null
-            this.form.district = null
+            // this.client.regency = null
+            // this.client.district = null
 
             // Empty Selection
-            this.area.regencies = []
-            this.area.districts = []
+            // this.area.regencies = []
+            // this.area.districts = []
 
-            this.$axios.get('https://kcd.e-belajar.id/api/area/province/' + this.form.province.id)
-            .then( res => {
-                if(res.data.status == 1) {
-                    this.area.regencies = res.data.data.regency
-                }
-            })
+            if(this.client.province) {
+                this.$axios.get('https://kcd.e-belajar.id/api/area/province/' + this.client.province.id)
+                .then( res => {
+                    if(res.data.status == 1) {
+                        this.area.regencies = res.data.data.regency
+                    }
+                })
+            }
         },
 
         selectRegency: function() {
 
+            if(this.client.regency) {
+                this.$axios.get('https://kcd.e-belajar.id/api/area/regency/' + this.client.regency.id)
+                .then( res => {
+                    if(res.data.status == 1) {
+                        this.area.districts = res.data.data.district
+                    }
+                })
+            }
+
             // Empty Address Form
-            // this.form.regency = null
-            this.form.district = null
+            // this.client.regency = null
+            // this.client.district = null
 
             // Empty Selection
-            this.area.districts = []
+            // this.area.districts = []
 
-            this.$axios.get('https://kcd.e-belajar.id/api/area/regency/' + this.form.regency.id)
-            .then( res => {
-                if(res.data.status == 1) {
-                    this.area.districts = res.data.data.district
-                }
-            })
+            
         }
     }
 

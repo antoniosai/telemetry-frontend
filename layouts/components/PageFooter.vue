@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'PageFooter'
+  name: 'page-footer'
 }
 </script>
 

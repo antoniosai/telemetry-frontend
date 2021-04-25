@@ -45,7 +45,7 @@
 				>
 					<template slot="table-row" style="background-color: #c5e1a5" :doc_due_date="doc_due_date" slot-scope="props">
 						<span v-if="props.column.field == 'name'">
-							<NuxtLink :to="'/admin/clients/' + props.row.id" style="font-size: 18px">
+							<NuxtLink :to="'/admin/clients/' + props.row.id + '/detail'" style="font-size: 18px">
 								<strong>{{ props.row.name }}</strong>
 							</NuxtLink>
 							<br>
@@ -68,11 +68,11 @@
 						</span>
 						<span v-if="props.column.field == 'region'">
 							<span v-if="props.row.province">
-								<strong><i>{{ props.row.province }}</i></strong>
+								<strong><i>{{ props.row.province ? JSON.parse(props.row.province).name : '' }}</i></strong>
 							</span>
 							<br>
 							<span v-if="props.row.regency">
-								{{ props.row.regency }}
+								{{ props.row.regency ? JSON.parse(props.row.regency).name : '' }}
 							</span>
 							<br>
 							<span v-if="props.row.zip_code">
@@ -81,9 +81,9 @@
 						</span>
 						
 						<span v-if="props.column.field == 'action'">
-							<NuxtLink :to="'/admin/clients/' + props.row.id" class="btn btn-sm btn-info"><i class="fa fa-info"></i> Detail</NuxtLink>
-							<NuxtLink :to="'/admin/clients/' + props.row.id" class="btn btn-sm btn-warning"><i class="fa fa-cog"></i></NuxtLink>
-							<NuxtLink :to="'/admin/clients/' + props.row.id" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></NuxtLink>
+							<NuxtLink :to="'/admin/clients/' + props.row.id + '/detail'" class="btn btn-sm btn-info"><i class="fa fa-info"></i> Detail</NuxtLink>
+							<NuxtLink :to="'/admin/clients/' + props.row.id + '/edit'" class="btn btn-sm btn-warning"><i class="fa fa-cog"></i></NuxtLink>
+							<button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
 						</span>
 					</template>
 				</vue-good-table>
@@ -103,6 +103,8 @@ import PageHeader from '~~/layouts/components/PageHeader'
 export default {
 
   loading: true,
+
+  name: 'admin-clients',
 
   components: {},
 
@@ -258,7 +260,7 @@ export default {
 <style scoped>
 
 .device-badge {
-	font-size: 18px;
+	font-size: 16px;
 }
 
 ::v-deep .vgt-table {

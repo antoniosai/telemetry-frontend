@@ -104,7 +104,7 @@ export default {
 
   loading: true,
 
-  name: 'DeviceList',
+  name: 'admin-devices-list',
 
   components: {},
 

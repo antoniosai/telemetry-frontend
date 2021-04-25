@@ -38,7 +38,7 @@
 
 <script>
 export default {
-    name: 'PageMenu'
+    name: 'page-menu'
 }
 </script>
 

@@ -187,7 +187,7 @@ import PageMenu from '~~/layouts/components/PageMenu'
 
 export default {
 
-  name: 'PageNavigation',
+  name: 'page-navigation',
 
   components: {
     PageMenu
