@@ -17,24 +17,9 @@
                     </li>
 
                     <li class="has-submenu">
-                        <a href="#">
-                            <i class="fa fa-toolbox"></i>Devices Management
-                        </a>
-                        <ul class="submenu megamenu">
-                            <li>
-                                <ul>
-                                    <li>
-                                        <NuxtLink to="/admin/devices/list">Device List</NuxtLink>
-                                    </li>
-                                    <li>
-                                        <a href="ui-cards.html">Category</a>
-                                    </li>
-                                    <li>
-                                        <a href="ui-tabs-accordions.html">Owner</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                        <NuxtLink to="/admin/devices">
+                            <i class="fa fa-toolbox"></i> Devices
+                        </NuxtLink>
                     </li>
                 </ul>
 

@@ -47,6 +47,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
+    'nuxt-leaflet',
     'nuxt-i18n',
     'vue-sweetalert2/nuxt',
     '@nuxtjs/toast',
