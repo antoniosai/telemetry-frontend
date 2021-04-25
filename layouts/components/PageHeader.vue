@@ -7,16 +7,17 @@
                         <slot name="button"></slot>
                     </div>
                 </div>
-                <h4 class="page-title">{{ title }}
-                    <br>
+                <h4 class="page-title">
+                    {{ title }}
+                    <br />
                     <small>
                         <ol class="breadcrumb hide-phone p-0 m-0" v-if="breadcrumb_arr">
-                            <li class="breadcrumb-item" v-for="(breadcrumb, index) in breadcrumb_arr" :key="index">
-                                <NuxtLink 
-                                    :to="breadcrumb.dest"
-                                >
-                                    {{ breadcrumb.title }}
-                                </NuxtLink>
+                            <li
+                                class="breadcrumb-item"
+                                v-for="(breadcrumb, index) in breadcrumb_arr"
+                                :key="index"
+                            >
+                                <NuxtLink :to="breadcrumb.dest">{{ breadcrumb.title }}</NuxtLink>
                             </li>
                         </ol>
                     </small>
@@ -28,13 +29,11 @@
 
 <script>
 export default {
+    props: ["title", "sub_title", "breadcrumb_arr"],
 
-    props: ['title', 'sub_title', 'breadcrumb_arr'],
-
-    name: 'page-header'
-}
+    name: "page-header",
+};
 </script>
 
 <style>
-
 </style>

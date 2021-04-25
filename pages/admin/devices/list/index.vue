@@ -1,286 +1,514 @@
 <template>
-  <div>
+    <div>
+        <PageHeader
+            title="List of All Devices"
+            :sub_title="'Showing 0 from 0 client(s)'"
+            :breadcrumb_arr="breadcrumb_arr"
+        >
+            <template v-slot:button>
+                <button v-on:click="triggerFilter" class="btn btn-secondary">
+                    <i class="fa fa-filter"></i>
+                    {{ open_filter ? 'Close Filter' : 'Open Filter' }}
+                </button>
+                <NuxtLink to="/admin/devices/list/register" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Register New Devices
+                </NuxtLink>
+            </template>
+        </PageHeader>
 
-    <PageHeader title="List of All Devices" :sub_title="'Showing 0 from 0 client(s)'" :breadcrumb_arr="breadcrumb_arr">
-			<template v-slot:button>
-				<NuxtLink to="/admin/devices/list/register" class="btn btn-primary"><i class="fa fa-plus"></i> Register New Devices</NuxtLink>
-			</template>
-		</PageHeader>
+        <div
+            v-if="
+            (filters.searchTerm != null) ||
+            (filters.searchTerm == '') ||
+            (filters.status != null) ||
+            (filters.province != null) ||
+            (filters.regency != null) ||
+            (filters.district != null)
+        "
+        >
+            <h4>Applied Filter(s)</h4>
+            Search Query: {{ filters.searchTerm }}
+        </div>
 
-    <div class="row">
-      <div class="col-md-12">
+        <div class="row">
+            <div
+                v-bind:class="{
+                    'col-md-9' : open_filter == true,
+                    'col-md-12' : open_filter == false
+                }"
+            >
+                <div class="row">
+                    <div
+                        v-bind:class="{
+                            'col-md-6 col-lg-6 pb-3' : open_filter == true,
+                            'col-md-6 col-lg-4 pb-3' : open_filter == false
+                        }"
+                        v-for="(device, index) in devices"
+                        :key="index"
+                    >
+                        <!-- Add a style="height: XYZpx" to div.card to limit the card height and display scrollbar instead -->
+                        <div class="card card-custom card-shadow bg-white border-white border-0">
+                            <div class="card-custom-img">
+                                <iframe
+                                    height="100%"
+                                    width="100%"
+                                    frameborder="0"
+                                    scrolling="no"
+                                    marginheight="0"
+                                    marginwidth="0"
+                                    :src="'https://maps.google.com/maps?q='+device.latitude+','+device.longitude+'&hl=id&z=14&amp;output=embed'"
+                                ></iframe>
+                            </div>
+                            <div class="card-custom-avatar">
+                                <!-- <img
+                            class="img-fluid"
+                            src="http://res.cloudinary.com/d3/image/upload/c_pad,g_center,h_200,q_auto:eco,w_200/bootstrap-logo_u3c8dx.jpg"
+                            alt="Avatar"
+                                />-->
+                            </div>
+                            <div class="card-body" style="overflow-y: auto">
+                                <div class="card-title">
+                                    <h4>{{ device.name }}</h4>
+                                    <span class="mr-2" style="color: #29434e">
+                                        <i class="fa fa-user mr-0"></i>
+                                        {{ device.owner.name }}
+                                    </span>
+                                    <span class="mr-2" style="color: #29434e">
+                                        <i class="fa fa-map-marker mr-0"></i>
+                                        {{ device.regency ? JSON.parse(device.regency).name : '' }}
+                                    </span>
+                                    <span class="mr-2" style="color: #29434e">
+                                        <i class="fa fa-clock mr-0"></i>
+                                        {{ $moment(device.created_at).format(
+                                        "D MMMM yyyy"
+                                        ) }}
+                                    </span>
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card card-shadow card-secondary">
+                                            <div class="card-body">
+                                                <blockquote class="card-bodyquote">
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
+                                                        erat a ante.
+                                                    </p>
+                                                    <footer>
+                                                        Someone famous in
+                                                        <cite
+                                                            title="Source Title"
+                                                        >Source Title</cite>
+                                                    </footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                </div>
+                            </div>
+                            <div
+                                class="card-footer"
+                                style="background: inherit; border-color: inherit;"
+                            >
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-success">
+                                            <i class="fa fa-database"></i> Reset Device
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="clearfix">
+                                            <div class="pull-right">
+                                                <a href="#" class="btn btn-danger">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </a>
+                                                <a href="#" class="btn btn-warning">
+                                                    <i class="fa fa-cog"></i> Edit
+                                                </a>
+                                                <a href="#" class="btn btn-primary">
+                                                    <i class="fa fa-info"></i> Detail
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <infinite-loading ref="InfiniteLoading" @infinite="infiniteHandler"></infinite-loading>
+            </div>
+            <div class="col-md-3" v-if="open_filter">
+                <div class="card card-shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="card-title font-20 mt-0">Filter</h4>
+                        <p class="font-14 mb-0">Search for specific Data.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <input
+                                            v-model="filters.searchTerm"
+                                            v-on:keyup.enter="submitFilter"
+                                            v-on:change="searchTerm"
+                                            type="text"
+                                            class="form-control"
+                                            id="inputname1"
+                                            placeholder="Search here anything"
+                                        />
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p class="mb-2">Status</p>
+                                        <div class="form-group">
+                                            <select class="form-control">
+                                                <option :value="null">-- All Status --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p class="mb-2">Filter By Area</p>
+                                        <div class="form-group">
+                                            <multiselect
+                                                v-model="filters.province"
+                                                @input="selectProvince"
+                                                :multiple="false"
+                                                :custom-label="selectLabel"
+                                                :options="area.provinces"
+                                                :searchable="true"
+                                                :close-on-select="true"
+                                                :allow-empty="false"
+                                                :show-labels="false"
+                                                placeholder="Select Province"
+                                                label="name"
+                                                track-by="name"
+                                            />
+                                        </div>
+                                        <div class="form-group">
+                                            <multiselect
+                                                v-model="filters.regency"
+                                                @input="selectRegency"
+                                                :multiple="false"
+                                                :custom-label="selectLabel"
+                                                :options="area.regencies"
+                                                :searchable="true"
+                                                :close-on-select="true"
+                                                :allow-empty="false"
+                                                :show-labels="false"
+                                                placeholder="Select Regency"
+                                                label="name"
+                                                track-by="name"
+                                            />
+                                        </div>
+                                        <div class="form-group">
+                                            <multiselect
+                                                v-model="filters.district"
+                                                @input="submitFilter"
+                                                :multiple="false"
+                                                :custom-label="selectLabel"
+                                                :options="area.districts"
+                                                :searchable="true"
+                                                :close-on-select="true"
+                                                :allow-empty="false"
+                                                :show-labels="false"
+                                                placeholder="Select District"
+                                                label="name"
+                                                track-by="name"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
-			<div class="table-responsive-sm">
-				<vue-good-table 
-					theme="polar-bear"
-					:search-options="{
-						enabled: true,
-						trigger: 'enter',
-						skipDiacritics: true,
-						placeholder: 'Type and enter to search'
-					}" mode="remote" 
-					@on-selected-rows-change="selectionChanged" 
-					@on-search="onColumnSearch"
-					@on-page-change="onPageChange" 
-					@on-sort-change="onSortChange" 
-					@on-column-filter="onColumnFilter"
-					@on-per-page-change="onPerPageChange" 
-					:totalRows="table.totalRows" 
-					:pagination-options="{
-						enabled: true,
-						mode: 'pages',
-						perPage: table.serverParams.perPage,
-						position: 'bottom',
-						perPageDropdown: table.perPageDropDown,
-						dropdownAllowAll: false,
-						setCurrentPage: table.serverParams.page,
-						nextLabel: 'Next',
-						prevLabel: 'Prev',
-						rowsPerPageLabel: 'Rows per page',
-						ofLabel: 'of',
-						pageLabel: 'page', // for 'pages' mode
-						allLabel: 'All',
-					}" :columns="table.columns" :rows="table.rows" 
-					styleClass="vgt-table condensed pgTble"
-				>
-					<template slot="table-row" style="background-color: #c5e1a5" :doc_due_date="doc_due_date" slot-scope="props">
-						<span v-if="props.column.field == 'name'">
-							<NuxtLink :to="'/admin/clients/' + props.row.id" style="font-size: 18px">
-								<strong>{{ props.row.name }}</strong>
-							</NuxtLink>
-							<br>
-							{{ props.row.phone_number }}
-							<br>
-							{{ props.row.email }}
-						</span>
-						<span v-if="props.column.field == 'created_at'">
-							{{ $moment(props.row.created_at).format('D MMMM yyyy') }} 
-						</span>
-						<span v-if="props.column.field == 'devices'">
-							<span class="device-badge badge badge-success"><i class="fa fa-chart-line"></i> 2 active</span>
-							<br>
-							<span class="device-badge badge badge-danger mt-2"><i class="fa fa-times-circle"></i> 1 in-active</span>
-						</span>
-						<span v-if="props.column.field == 'ticket'">
-							<span class="device-badge badge badge-success"><i class="fa fa-check"></i> 2 done</span>
-							<br>
-							<span class="device-badge badge badge-primary mt-2"><i class="fa fa-chart-line"></i> 1 active</span>
-						</span>
-						<span v-if="props.column.field == 'region'">
-							<span v-if="props.row.province">
-								<strong><i>{{ props.row.province }}</i></strong>
-							</span>
-							<br>
-							<span v-if="props.row.regency">
-								{{ props.row.regency }}
-							</span>
-							<br>
-							<span v-if="props.row.zip_code">
-								{{ props.row.zip_code ? 'ZIP Code: ' + props.row.zip_code : '' }}
-							</span>
-						</span>
-						
-						<span v-if="props.column.field == 'action'">
-							<NuxtLink :to="'/admin/clients/' + props.row.id" class="btn btn-sm btn-info"><i class="fa fa-info"></i> Detail</NuxtLink>
-							<NuxtLink :to="'/admin/clients/' + props.row.id" class="btn btn-sm btn-warning"><i class="fa fa-cog"></i></NuxtLink>
-							<NuxtLink :to="'/admin/clients/' + props.row.id" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></NuxtLink>
-						</span>
-					</template>
-				</vue-good-table>
-			</div>
-		</div>
+                                <div class="col-auto p-0">
+                                    <div class="clearfix">
+                                        <div class="pull-right">
+                                            <button
+                                                v-on:click="resetFilter"
+                                                class="btn btn-warning"
+                                            >
+                                                <i class="fa fa-redo-alt"></i> Reset
+                                            </button>
+                                            <button
+                                                v-on:click="submitFilter"
+                                                class="btn btn-primary"
+                                            >
+                                                <i class="fa fa-check"></i> Submit Filters
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-  </div>
 </template>
 
 <script>
+import InfiniteLoading from "vue-infinite-loading";
+import Multiselect from "vue-multiselect";
 
-
-import PageHeader from '~~/layouts/components/PageHeader'
-
+import PageHeader from "~~/layouts/components/PageHeader";
 
 export default {
+    loading: true,
 
-  loading: true,
+    name: "admin-devices-list",
 
-  name: 'admin-devices-list',
+    components: {
+        InfiniteLoading,
+        Multiselect,
+        PageHeader,
+    },
 
-  components: {},
-
-  computed: {
-    breadcrumb_arr: function () {
-      return [{
-          title: 'Dashboard',
-          dest: '/'
+    computed: {
+        breadcrumb_arr: function () {
+            return [
+                {
+                    title: "Dashboard",
+                    dest: "/",
+                },
+                {
+                    title: "Devices Management",
+                    dest: "/admin/devices",
+                },
+                {
+                    title: "List",
+                    dest: "/admin/devices/list",
+                },
+            ];
         },
-        {
-          title: 'Devices Management',
-          dest: '/admin/devices'
-        },
-        {
-          title: 'List',
-          dest: '/admin/devices/list'
-        },
-      ]
-    }
-  },
+    },
 
-  data: () => ({
-    table: {
-      columns: [{
-          label: 'Full Name',
-          field: 'name',
+    data: () => ({
+        open_filter: true,
+
+        filters: {
+            page: 1,
+            searchTerm: null,
+            status: null,
+            province: null,
+            regency: null,
+            district: null,
         },
-        {
-          label: 'Region',
-          field: 'region',
+        area: {
+            provinces: [],
+            regencies: [],
+            districts: [],
         },
-        {
-          label: 'Integrated Devices',
-          field: 'devices',
+
+        devices: [],
+
+        table: {
+            columns: [
+                {
+                    label: "Device Name",
+                    field: "name",
+                },
+                {
+                    label: "Device Code",
+                    field: "code",
+                },
+                {
+                    label: "Status",
+                    field: "status",
+                },
+                {
+                    label: "Owner",
+                    field: "owner",
+                },
+                {
+                    label: "Support Ticket",
+                    field: "ticket",
+                },
+                {
+                    label: "Created Date",
+                    field: "created_at",
+                },
+                {
+                    label: "",
+                    field: "action",
+                },
+            ],
+            rows: [],
+            totalRows: "",
+            serverParams: {
+                manual_filter: 0,
+                perPage: 10,
+                searchTerm: "",
+            },
+            perPageDropDown: [10, 25, 50, 100],
+            selectedRows: [],
         },
-        {
-          label: 'Support Ticket',
-          field: 'ticket',
+    }),
+
+    mounted() {
+        // this.initData();
+        this.getProvinces();
+    },
+
+    methods: {
+        selectLabel({ name }) {
+            return `${name}`;
         },
-        {
-          label: 'Created Date',
-          field: 'created_at',
+
+        infiniteHandler($state) {
+            let params = this.filters;
+
+            this.$axios
+                .get("/admin_area/devices", { params })
+                .then(({ data }) => {
+                    console.log(data.data);
+                    if (data.data.length) {
+                        this.filters.page += 1;
+                        this.devices.push(...data.data);
+                        $state.loaded();
+                    } else {
+                        $state.complete();
+                    }
+                });
         },
-        {
-          label: '',
-          field: 'action',
+
+        triggerFilter: function () {
+            this.open_filter
+                ? (this.open_filter = false)
+                : (this.open_filter = true);
         },
-      ],
-      rows: [],
-			totalRows: '',
-			serverParams: {
-				manual_filter: 0,
-				perPage: 10,
-				searchTerm: ''
-			},
-			perPageDropDown: [10, 25, 50, 100],
-			selectedRows: []
-    }
-  }),
 
-  components: {
-    PageHeader
-  },
+        submitFilter: function () {
+            // this.devices = [];
+            // this.initData();
+            this.filters.page = 1;
+            this.devices = [];
+            this.$refs.InfiniteLoading.stateChanger.reset();
+        },
 
-  mounted() {
-    this.initData()
-  },
+        resetFilter: function () {
+            this.filters = {
+                page: 1,
+                searchTerm: null,
+                status: null,
+                province: null,
+                regency: null,
+                district: null,
+            };
 
-  	methods: {
-    	initData: function () {
+            this.submitFilter();
+        },
 
-			let params = this.table.serverParams
+        searchTerm: function () {
+            this.filters.searchTerm == ""
+                ? (this.filters.searchTerm = null)
+                : null;
+            console.log(this.filters.searchTerm);
+        },
 
-			this.$axios.get('/admin_area/clients', { params })
-			.then(res => {
-				this.table.rows = res.data.data
-				this.table.totalRows = res.data.total
-			})
-		},
-		selectionChanged(params) {
-			this.table.selectedRows = [];
-			for (let i = 0; i < params.selectedRows.length; i++) {
-				this.table.selectedRows.push(params.selectedRows[i].pg_id)
-			}
-		},
-		onColumnSearch(params) {
-			this.updateParams(params)
-			this.updateParams({
-				page: 1
-			})
-			this.initData()
-		},
-		onPageChange(params) {
-			this.updateParams({
-				page: params.currentPage
-			})
-			this.initData()
-		},
-		onPerPageChange(params) {
-			this.updateParams({
-				perPage: params.currentPerPage
-			})
-			this.initData()
-		},
-		onSortChange(params) {
-			this.updateParams({
-				sort_type: params[0].type,
-				sort_field: params[0].field
-			})
-			this.updateParams({
-				page: 1
-			})
-			this.initData()
-		},
+        getProvinces: function () {
+            this.$axios
+                .get("https://kcd.e-belajar.id/api/area/province")
+                .then((res) => {
+                    if (res.data.status == 1) {
+                        this.area.provinces = res.data.data;
+                    }
+                });
+        },
 
-		onColumnFilter(params) {
-			let col_filter = params.columnFilters
-			// this.updateParams(params)
-			let new_params = {
-				page: 1
-				// new
-			}
-			this.updateParams(new_params)
-			this.initData()
-		},
-		onColumnSearch(params) {
-			this.updateParams(params)
-			this.updateParams({
-				page: 1
-			})
-			this.initData()
-		},
-		// load items is what brings back the rows from server
-		loadItems() {
-			this.handleDatatableChange(this.table.serverParams).then(() => {
-				// this.loading.isLoading = false
-			})
-		},
-		updateParams(newProps) {
-			this.table.serverParams = Object.assign({}, this.table.serverParams, newProps)
-		},
-  	}
+        selectProvince: function () {
+            // Empty Address Form
+            this.filters.regency = null;
+            this.filters.district = null;
 
-}
+            // Empty Selection
+            this.area.regencies = [];
+            this.area.districts = [];
+
+            this.$axios
+                .get(
+                    "https://kcd.e-belajar.id/api/area/province/" +
+                        this.filters.province.id
+                )
+                .then((res) => {
+                    if (res.data.status == 1) {
+                        this.area.regencies = res.data.data.regency;
+                    }
+                });
+        },
+
+        selectRegency: function () {
+            // Empty Address Form
+            // this.filters.regency = null
+            this.filters.district = null;
+
+            // Empty Selection
+            this.area.districts = [];
+
+            this.$axios
+                .get(
+                    "https://kcd.e-belajar.id/api/area/regency/" +
+                        this.filters.regency.id
+                )
+                .then((res) => {
+                    if (res.data.status == 1) {
+                        this.area.districts = res.data.data.district;
+                    }
+                });
+        },
+    },
+};
 </script>
 
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
 <style scoped>
-
-.device-badge {
-	font-size: 18px;
+.card-custom {
+    overflow: hidden;
+    min-height: 450px;
 }
 
-::v-deep .vgt-table {
-	/* height: 100%; */
-	/* border-collapse: collapse !important; */
-	border-top: none !important;
+.card-shadow {
+    box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
 }
 
-
-::v-deep .vgt-table thead tr:first-child th, .vgt-table thead tr:first-child td {
-	position: sticky !important;
-	position: -webkit-sticky !important; /* Safari */
-	top: 0 !important;
-	z-index: 1 !important;
-	box-shadow: inset 0 2px 0 #dcdfe6, inset 0 -1px 0 #dcdfe6 !important;
-	border: none !important;
+.card-custom-img {
+    height: 200px;
+    min-height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-color: inherit;
 }
 
-::v-deep .vgt-table thead tr:nth-child(2) th, .vgt-table thead tr:nth-child(2) td {
-	position: sticky !important;
-	position: -webkit-sticky !important;
-	top: 34.12px !important;
-	z-index: 1 !important;
-	box-shadow: inset 0 1px 0 #dcdfe6, inset 0 -2px 0 #dcdfe6 !important;
-	border: none !important;
-
+/* First border-left-width setting is a fallback */
+.card-custom-img::after {
+    position: absolute;
+    content: "";
+    top: 161px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-top-width: 40px;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 545px;
+    border-left-width: calc(575px - 5vw);
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: inherit;
 }
 
+.card-custom-avatar img {
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+    position: absolute;
+    top: 100px;
+    left: 1.25rem;
+    width: 100px;
+    height: 100px;
+}
 </style>

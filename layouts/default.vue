@@ -1,36 +1,34 @@
 <template>
-  <div>
-    <PageNavigation />
-    <div class="wrapper">
-    <div class="container-fluid">
-        <Nuxt />
+    <div>
+        <PageNavigation />
+        <div class="wrapper">
+            <div class="container-fluid">
+                <Nuxt />
+            </div>
+        </div>
+        <PageFooter />
     </div>
-    </div>
-    <PageFooter />
-  </div>
 </template>
 
 <script>
+import LoginPage from "~~/pages/auth/login";
 
-import LoginPage from '~~/pages/auth/login'
-
-import PageNavigation from '~~/layouts/components/PageNavigation'
-import PageFooter from '~~/layouts/components/PageFooter'
+import PageNavigation from "~~/layouts/components/PageNavigation";
+import PageFooter from "~~/layouts/components/PageFooter";
 
 export default {
-
-    name: 'layout',
-    
+    name: "layout",
 
     components: {
         LoginPage,
-        PageNavigation, PageFooter
+        PageNavigation,
+        PageFooter,
     },
 
     computed: {
-        isLoggedIn: function() {
-            return this.$store.getters.isLoggedIn
-        }
-    }
-}
+        isLoggedIn: function () {
+            return this.$store.getters.isLoggedIn;
+        },
+    },
+};
 </script>

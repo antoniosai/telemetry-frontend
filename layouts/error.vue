@@ -1,15 +1,17 @@
 <template>
-    <div>
+    <div id="content">
         <Nuxt />
     </div>
 </template>
 
 <script>
 export default {
-
-}
+    name: "error-layout",
+};
 </script>
 
-<style>
-
+<style scoped>
+#content {
+    color: black;
+}
 </style>

@@ -1,23 +1,19 @@
 <template>
-  <div>
-    
-    <Nuxt />
-  </div>
+    <div>
+        <Nuxt />
+    </div>
 </template>
 
 <script>
-
 export default {
+    name: "auth-layout",
 
-    name: 'auth-layout',
-
-    components: {
-    },
+    components: {},
 
     computed: {
-        isLoggedIn: function() {
-            return true
-        }
-    }
-}
+        isLoggedIn: function () {
+            return true;
+        },
+    },
+};
 </script>

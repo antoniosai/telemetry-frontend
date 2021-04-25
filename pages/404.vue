@@ -1,15 +1,15 @@
 <template>
-    <div>
-        Oopps! Page not Found
-    </div>
+    <div id="content">'Center'</div>
 </template>
 
 <script>
 export default {
-    layout: 'error'
-}
+    layout: "error",
+};
 </script>
 
-<style>
-
+<style scoped>
+#content {
+    text-align: center;
+}
 </style>
