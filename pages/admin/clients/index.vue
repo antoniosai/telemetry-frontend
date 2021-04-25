@@ -81,13 +81,9 @@
                             </span>
                             <span v-if="props.column.field == 'devices'">
                                 <span class="device-badge badge badge-success">
-                                    <i class="fa fa-chart-line"></i> 2
-                                    active
-                                </span>
-                                <br />
-                                <span class="device-badge badge badge-danger mt-2">
-                                    <i class="fa fa-times-circle"></i> 1
-                                    in-active
+                                    <i class="fa fa-chart-line"></i>
+                                    {{ props.row.device_count }}
+                                    active device(s)
                                 </span>
                             </span>
                             <span v-if="props.column.field == 'ticket'">

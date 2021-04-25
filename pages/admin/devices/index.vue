@@ -125,7 +125,7 @@
                     :breadcrumb_arr="installed_devices"
                 />
                 <div id="map-wrap" style="height: 400px">
-                    <no-ssr>
+                    <client-only>
                         <l-map :zoom="4" :center="[1.3371023399773747, 114.39261166161292]">
                             <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
                             <l-marker
@@ -134,7 +134,7 @@
                                 :lat-lng="[loc.latitude, loc.longitude]"
                             ></l-marker>
                         </l-map>
-                    </no-ssr>
+                    </client-only>
                 </div>
             </div>
         </div>

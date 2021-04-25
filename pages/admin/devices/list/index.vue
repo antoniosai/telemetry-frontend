@@ -54,7 +54,11 @@
                             </div>
                             <div class="card-body" style="overflow-y: auto">
                                 <div class="card-title">
-                                    <h4>{{ device.name }}</h4>
+                                    <h4>
+                                        {{ device.category.name }}
+                                        <br />
+                                        <small style="font-size: 16px">{{ device.name }}</small>
+                                    </h4>
                                     <span class="mr-2" style="color: #29434e">
                                         <i class="fa fa-user mr-0"></i>
                                         {{ device.owner.name }}
@@ -106,15 +110,17 @@
                                     <div class="col-md-6">
                                         <div class="clearfix">
                                             <div class="pull-right">
-                                                <a href="#" class="btn btn-danger">
-                                                    <i class="fa fa-trash"></i> Delete
-                                                </a>
-                                                <a href="#" class="btn btn-warning">
-                                                    <i class="fa fa-cog"></i> Edit
-                                                </a>
-                                                <a href="#" class="btn btn-primary">
-                                                    <i class="fa fa-info"></i> Detail
-                                                </a>
+                                                <div class="btn-group">
+                                                    <a href="#" class="btn btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                    <a href="#" class="btn btn-warning">
+                                                        <i class="fa fa-cog"></i>
+                                                    </a>
+                                                    <a href="#" class="btn btn-primary">
+                                                        <i class="fa fa-info"></i>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
