@@ -127,7 +127,12 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header bg-primary text-white">Device(s) Summary</div>
-                                <div class="card-body"></div>
+                                <div class="card-body">
+                                    <BarChart
+                                        :data="barChartData"
+                                        :options="{ maintainAspectRatio: false }"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -160,6 +165,7 @@
 
 <script>
 import PageHeader from "~~/layouts/components/PageHeader";
+import BarChart from "~/components/bar-chart";
 
 export default {
     name: "admin-devices",
@@ -190,6 +196,7 @@ export default {
 
     components: {
         PageHeader,
+        BarChart,
     },
 
     data: () => ({
@@ -198,6 +205,17 @@ export default {
             owners: 0,
             categories: 0,
             locations: [],
+        },
+
+        barChartData: {
+            labels: ["Actve", "In-active", "Take Down"],
+            datasets: [
+                {
+                    label: "Nuxt Commit Activity",
+                    backgroundColor: "#41B38A",
+                    data: 40,
+                },
+            ],
         },
     }),
 
