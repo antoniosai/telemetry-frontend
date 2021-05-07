@@ -13,30 +13,127 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <i class="fa fa-info-circle"></i> RAW Data From Sensor
+                        <i class="fa fa-info-circle"></i> Device Details
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <div class="alert alert-success">
-                                <h4>
-                                    <i class="fa fa-check"></i> RAW Data
-                                </h4>
-                                <p>Last Fetched Tiem: May 8th, 2020 23:15</p>
+                        <div id="tab_area">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link show active"
+                                        data-toggle="tab"
+                                        href="#info"
+                                        role="tab"
+                                        aria-selected="true"
+                                    >Main Information</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link show"
+                                        data-toggle="tab"
+                                        href="#location"
+                                        role="tab"
+                                        aria-selected="false"
+                                    >Location</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link show"
+                                        data-toggle="tab"
+                                        href="#raw_data"
+                                        role="tab"
+                                        aria-selected="false"
+                                    >Raw Data</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane p-3 show active" id="info" role="tabpanel">
+                                    <div class="row">
+                                        <div
+                                            class="col-lg-12 col-sm-12 text-center align-self-center"
+                                        >
+                                            <h6 class>San Francisco, California</h6>
+                                            <p class="text-muted">
+                                                SUNDAY
+                                                <span>
+                                                    25
+                                                    <sup>th</sup> Jan
+                                                </span>
+                                            </p>
+                                            <canvas id="clear-day" width="50" height="50"></canvas>
+                                            <h5 class="mt-0">
+                                                <b>32°</b>
+                                            </h5>
+                                            <p class="text-muted font-12">Clear Day</p>
+                                            <p class="text-muted">
+                                                There are many variations of passages of
+                                                Lorem Ipsum available, but the majority have suffered alteration.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4 text-center align-self-center">
+                                            <h6 class="text-muted mt-0 font-14">MON</h6>
+                                            <canvas id="rain" width="28" height="18"></canvas>
+                                            <h6 class="text-muted font-14 mb-0">
+                                                28°
+                                                <i class="wi-degrees"></i>
+                                            </h6>
+                                        </div>
+                                        <div class="col-4 text-center align-self-center">
+                                            <h6 class="text-muted mt-0 font-14">TUE</h6>
+                                            <canvas id="wind" width="35" height="18"></canvas>
+                                            <h6 class="text-muted font-14 mb-0">
+                                                32°
+                                                <i class="wi-degrees"></i>
+                                            </h6>
+                                        </div>
+                                        <div class="col-4 text-center align-self-center">
+                                            <h6 class="text-muted mt-0 font-14">WEN</h6>
+                                            <canvas id="snow" width="35" height="18"></canvas>
+                                            <h6 class="text-muted font-14 mb-0">
+                                                10°
+                                                <i class="wi-degrees"></i>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane p-3 show" id="location" role="tabpanel"></div>
+                                <div class="tab-pane p-3 show" id="raw_data" role="tabpanel">
+                                    <div class="table-responsive" v-if="raw_data.length > 0">
+                                        <div class="alert alert-success">
+                                            <p
+                                                class="mb-1"
+                                            >Last Fetched Tiem: {{ raw_data[0].date }}</p>
+                                            <p
+                                                class="mb-1"
+                                            >Showing last {{ raw_data.length }} records</p>
+                                        </div>
+                                        <table
+                                            class="table table-hover table-striped table-condensed"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Data</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(raw, index) in raw_data" :key="index">
+                                                    <td>{{ raw.date }}</td>
+                                                    <td>
+                                                        {{ raw.data }}
+                                                        <small>cm</small>
+                                                    </td>
+                                                    <td>GOOD</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <table class="table table-hover table-striped table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Data</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(raw, index) in raw_data" :key="index">
-                                        <td>{{ raw.time }}</td>
-                                        <td>{{ raw.data }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
@@ -51,6 +148,8 @@ import mqtt from "mqtt";
 import PageHeader from "~~/layouts/components/PageHeader";
 
 export default {
+    name: "admin-device-detail",
+
     components: {
         PageHeader,
     },
@@ -122,6 +221,35 @@ export default {
     },
 
     methods: {
+        getCurrentDate: function () {
+            let date = new Date(); //10 May 2019, 3:30:20 PM
+            let dateStr = date.toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+            }); // 10/05/19
+
+            let arr = dateStr.split("/"); // [ '10', '05', '19' ]
+            let d = arr[0]; //e.g. 10
+            let m = arr[1]; //e.g. 5
+            let y = arr[2]; //e.g. 19
+
+            let timeStr = date.toLocaleTimeString("en-GB", {
+                hour12: false,
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            }); //
+            let arr2 = timeStr.split(":"); // 15:30:20
+            let H = arr2[0]; //e.g. 15
+            let i = arr2[1]; //e.g. 30
+            let s = arr2[2]; //e.g. 20
+
+            // let ymdHms = m + d + H + i + s;
+            let ymdHms = m + "/" + d + " " + H + ":" + i + ":" + s;
+            return ymdHms;
+        },
+
         initData: function () {
             this.$axios
                 .get("/admin_area/devices/" + this.$route.params.id)
@@ -169,8 +297,13 @@ export default {
             this.client.on("message", (topic, message) => {
                 this.receiveNews = this.receiveNews.concat(message);
                 let parsedMessage = JSON.parse(message);
+                parsedMessage.date = this.getCurrentDate();
 
-                this.raw_data.push(parsedMessage);
+                this.raw_data.unshift(parsedMessage);
+                if (this.raw_data.length > 15) {
+                    this.raw_data.pop();
+                }
+
                 // console.log(`Received message ${message} from topic ${topic}`);
             });
         },
