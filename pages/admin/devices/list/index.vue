@@ -117,9 +117,15 @@
                                                     <a href="#" class="btn btn-warning">
                                                         <i class="fa fa-cog"></i>
                                                     </a>
-                                                    <a href="#" class="btn btn-primary">
+                                                    <nuxt-link
+                                                        :to="
+                                                            '/admin/devices/' +
+                                                            device.id
+                                                        "
+                                                        class="btn btn-primary"
+                                                    >
                                                         <i class="fa fa-info"></i>
-                                                    </a>
+                                                    </nuxt-link>
                                                 </div>
                                             </div>
                                         </div>
