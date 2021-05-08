@@ -9,7 +9,16 @@
         </PageHeader>
 
         <div class="row">
-            <div class="col-md-8"></div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <i class="fa fa-chart"></i> Sensor Chart
+                    </div>
+                    <div class="card-body">
+                        <LineChart />
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
@@ -25,7 +34,9 @@
                                         href="#info"
                                         role="tab"
                                         aria-selected="true"
-                                    >Main Information</a>
+                                    >
+                                        <i class="fa fa-info"></i> Main Information
+                                    </a>
                                 </li>
                                 <li class="nav-item">
                                     <a
@@ -34,7 +45,9 @@
                                         href="#location"
                                         role="tab"
                                         aria-selected="false"
-                                    >Location</a>
+                                    >
+                                        <i class="fa fa-map-marker"></i> Location
+                                    </a>
                                 </li>
                                 <li class="nav-item">
                                     <a
@@ -43,7 +56,9 @@
                                         href="#raw_data"
                                         role="tab"
                                         aria-selected="false"
-                                    >Raw Data</a>
+                                    >
+                                        <i class="fa fa-table"></i> Raw Data
+                                    </a>
                                 </li>
                             </ul>
 
@@ -122,9 +137,9 @@
                                             </thead>
                                             <tbody>
                                                 <tr v-for="(raw, index) in raw_data" :key="index">
-                                                    <td>{{ raw.date }}</td>
+                                                    <td>{{ raw.x }}</td>
                                                     <td>
-                                                        {{ raw.data }}
+                                                        {{ raw.y }}
                                                         <small>cm</small>
                                                     </td>
                                                     <td>GOOD</td>
@@ -147,11 +162,14 @@ import mqtt from "mqtt";
 
 import PageHeader from "~~/layouts/components/PageHeader";
 
+import LineChart from "../../../components/chart/Line";
+
 export default {
     name: "admin-device-detail",
 
     components: {
         PageHeader,
+        LineChart,
     },
 
     data: () => ({
@@ -163,6 +181,7 @@ export default {
         },
 
         raw_data: [],
+        chart_data: [],
 
         connection: {
             host: "mqtt.dioty.co",
@@ -255,7 +274,7 @@ export default {
                 .get("/admin_area/devices/" + this.$route.params.id)
                 .then((res) => {
                     if (res.data.status == 1) {
-                        this.initBroker();
+                        // this.initBroker();
                         this.device = res.data.data;
                         this.device.province = JSON.parse(
                             res.data.data.province
@@ -297,9 +316,12 @@ export default {
             this.client.on("message", (topic, message) => {
                 this.receiveNews = this.receiveNews.concat(message);
                 let parsedMessage = JSON.parse(message);
-                parsedMessage.date = this.getCurrentDate();
+
+                console.log("Main", parsedMessage);
+                parsedMessage.x = this.getCurrentDate();
 
                 this.raw_data.unshift(parsedMessage);
+                this.chart_data.push(parsedMessage.data);
                 if (this.raw_data.length > 15) {
                     this.raw_data.pop();
                 }
