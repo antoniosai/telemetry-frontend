@@ -1,11 +1,17 @@
 <template>
-    <apexchart
-        ref="realtimeChart"
-        type="line"
-        height="390"
-        :options="chart.chartOptions"
-        :series="chart.series"
-    />
+    <div>
+        <div class="alert alert-primary">
+            <i class="fa fa-info-circle"></i> Chart will be resetted every 60 seconds due to preventing leak memory
+        </div>
+
+        <apexchart
+            ref="realtimeChart"
+            type="line"
+            height="400"
+            :options="chart.chartOptions"
+            :series="chart.series"
+        />
+    </div>
 </template>
 
 <script>
@@ -146,7 +152,7 @@ export default {
             },
         };
     },
-    mounted() {
+    created() {
         this.initBroker();
         this.setDataLineChart();
     },
