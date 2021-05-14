@@ -54,24 +54,26 @@
                             </div>
                             <div class="card-body" style="overflow-y: auto">
                                 <div class="card-title">
-                                    <h4>
-                                        {{ device.category.name }}
-                                        <br />
-                                        <small style="font-size: 16px">{{ device.name }}</small>
-                                    </h4>
-                                    <span class="mr-2" style="color: #29434e">
+                                    <h3 class="mb-2">{{ device.name }}</h3>
+                                    <span class="mr-2 pointer desc-badge">
                                         <i class="fa fa-user mr-0"></i>
                                         {{ device.owner.name }}
                                     </span>
-                                    <span class="mr-2" style="color: #29434e">
+                                    <span class="mr-2 pointer desc-badge">
                                         <i class="fa fa-map-marker mr-0"></i>
                                         {{ device.regency ? JSON.parse(device.regency).name : '' }}
                                     </span>
-                                    <span class="mr-2" style="color: #29434e">
+                                    <span class="mr-2 pointer desc-badge">
                                         <i class="fa fa-clock mr-0"></i>
                                         {{ $moment(device.created_at).format(
                                         "D MMMM yyyy"
                                         ) }}
+                                    </span>
+                                    <span class="mr-2 desc-badge">
+                                        <i class="fa fa-sync mr-0"></i>
+                                        {{ device.sensor.length > 0 ? $moment(device.sensor[0].created_at).format(
+                                        "D MMMM yyyy LT"
+                                        ) : 'No Sensor Data' }}
                                     </span>
                                 </div>
                                 <hr />
@@ -80,16 +82,7 @@
                                         <div class="card card-shadow card-secondary">
                                             <div class="card-body">
                                                 <blockquote class="card-bodyquote">
-                                                    <p>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
-                                                        erat a ante.
-                                                    </p>
-                                                    <footer>
-                                                        Someone famous in
-                                                        <cite
-                                                            title="Source Title"
-                                                        >Source Title</cite>
-                                                    </footer>
+                                                    <p v-html="device.description"></p>
                                                 </blockquote>
                                             </div>
                                         </div>
@@ -509,6 +502,11 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
+h3,
+.desc-badge {
+    color: #01579b;
+}
+
 .badge-area {
     font-size: 12px;
 }

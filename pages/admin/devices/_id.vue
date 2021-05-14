@@ -1,7 +1,7 @@
 <template>
     <div>
         <PageHeader
-            title="List of All Devices"
+            :title="device.name"
             :sub_title="'Showing 0 from 0 client(s)'"
             :breadcrumb_arr="breadcrumb_arr"
         >
@@ -27,7 +27,8 @@
                         <i class="fa fa-chart-area"></i> Live Sensor Log
                     </div>
                     <div class="card-body">
-                        <LineChart />
+                        <!-- <SteamChart /> -->
+                        <LineChart :categories="categories" />
                     </div>
                 </div>
             </div>
@@ -136,8 +137,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5>ads</h5>
-                        <h5>asddd</h5>
+                        <h5>Generate Report</h5>
                         <button
                             type="button"
                             class="close"
@@ -145,17 +145,40 @@
                             aria-hidden="true"
                         >×</button>
                     </div>
-                    <div class="modal-body"></div>
-                    <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-danger waves-effect"
-                            data-dismiss="modal"
-                        >Close</button>
-                        <button
-                            type="button"
-                            class="btn btn-primary waves-effect waves-light"
-                        >Save changes</button>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="start_date">From</label>
+                                        <input type="datetime-local" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="start_date">From</label>
+                                        <input type="datetime-local" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <center>
+                                        <label for="output_format">Output Format</label>
+                                        <br />
+                                        <button class="btn btn-danger">
+                                            <i class="fa fa-file-pdf"></i> PDF
+                                        </button>
+
+                                        <button class="btn btn-success">
+                                            <i class="fa fa-file-excel"></i> Excel
+                                        </button>
+                                        <button class="btn btn-info">
+                                            <i class="fa fa-file-csv"></i>
+                                            CSV
+                                        </button>
+                                    </center>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -171,6 +194,7 @@ import mqtt from "mqtt";
 
 import PageHeader from "~~/layouts/components/PageHeader";
 
+import SteamChart from "../../../components/chart/Steam";
 import LineChart from "../../../components/chart/Line";
 
 export default {
@@ -178,6 +202,7 @@ export default {
 
     components: {
         PageHeader,
+        SteamChart,
         LineChart,
     },
 
@@ -189,6 +214,33 @@ export default {
             regency: {},
             district: {},
         },
+
+        categories: [
+            "20 Mei 2021",
+            "21 Mei 2021",
+            "22 Mei 2021",
+            "23 Mei 2021",
+            "24 Mei 2021",
+            "25 Mei 2021",
+            "26 Mei 2021",
+            "27 Mei 2021",
+            "28 Mei 2021",
+            "31 Mei 2021",
+            "1 June 2021",
+            "2 June 2021",
+            "3 June 2021",
+            "4 June 2021",
+            "5 June 2021",
+            "6 June 2021",
+            "7 June 2021",
+            "8 June 2021",
+            "9 June 2021",
+            "10 June 2021",
+            "11 June 2021",
+            "12 June 2021",
+            "13 June 2021",
+            "14 June 2021",
+        ],
     }),
 
     computed: {
