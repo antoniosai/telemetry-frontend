@@ -70,10 +70,16 @@
                                         <div
                                             class="col-lg-12 col-sm-12 text-center align-self-center"
                                         >
-                                            <div class="alert alert-success">
-                                                <i class="fa fa-check-circle fa-4x"></i>
-                                                <h2>Your Device at Good Status</h2>
-                                                <p>Last Synchronized : May 8th, 2021 20:31</p>
+                                            <div
+                                                class="alert alert-success"
+                                                v-bind:class="{ 'alert-success': status.alert == 'success', 'alert-danger': status.alert == 'danger', 'alert-warning': status.alert == 'warning' }"
+                                            >
+                                                <i
+                                                    class="fa fa-4x"
+                                                    v-bind:class="{ 'fa-check-circle': status.alert == 'success', 'fa-times': status.alert == 'danger', 'fa-exclamation-triangle': status.alert == 'warning',}"
+                                                ></i>
+                                                <h2>{{ status.message }}</h2>
+                                                <p>Last Sync : {{ status.last_sync }}</p>
                                             </div>
 
                                             <table class="table table-condensed">
@@ -215,6 +221,12 @@ export default {
             district: {},
         },
 
+        status: {
+            message: "",
+            alert: "",
+            last_sync: "",
+        },
+
         categories: [
             "20 Mei 2021",
             "21 Mei 2021",
@@ -244,6 +256,31 @@ export default {
     }),
 
     computed: {
+        last_sync: function () {
+            let date_a = this.$moment(this.device.created_at);
+            let date_b = this.$moment(this.device.updated_at);
+
+            let diff = date_a.diff(date_b, "minutes") * -1;
+            if (diff < 60) {
+                this.status.message = "Your Device at Good Status. Last Sync ";
+                this.status.alert = "success";
+            } else if (diff > 60) {
+                this.status.message =
+                    "Please check the Device. It doesn't respons since ";
+                this.status.alert = "";
+            } else if (diff > 1440) {
+                this.status.message =
+                    "The Device doesn't Repond since a long time ago since ";
+                this.status.alert = "danger";
+            }
+
+            this.status.last_sync = this.$moment(this.device.updated_at).format(
+                "lll"
+            );
+
+            return diff;
+        },
+
         breadcrumb_arr: function () {
             return [
                 {
