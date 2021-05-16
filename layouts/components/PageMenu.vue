@@ -3,26 +3,7 @@
         <div class="container-fluid">
             <div id="navigation">
                 <!-- Navigation Menu-->
-                <ul class="navigation-menu text-center">
-                    <li class="has-submenu">
-                        <NuxtLink to="/">
-                            <i class="mdi mdi-airplay"></i>Dashboard
-                        </NuxtLink>
-                    </li>
-
-                    <li class="has-submenu">
-                        <NuxtLink to="/admin/clients">
-                            <i class="mdi mdi-account"></i>Client Area
-                        </NuxtLink>
-                    </li>
-
-                    <li class="has-submenu">
-                        <NuxtLink to="/admin/devices">
-                            <i class="fa fa-toolbox"></i> Devices
-                        </NuxtLink>
-                    </li>
-                </ul>
-
+                <MenuAdmin v-if="user_type == 'admin' " />
                 <!-- End navigation menu -->
             </div>
             <!-- end #navigation -->
@@ -32,8 +13,23 @@
 </template>
 
 <script>
+import MenuAdmin from "~~/layouts/components/menu/Admin.vue";
+
 export default {
     name: "page-menu",
+
+    components: {
+        MenuAdmin,
+    },
+
+    computed: {
+        user_type: function () {
+            return JSON.parse(localStorage.getItem("user")).user_type;
+        },
+    },
+    mounted() {
+        console.log(this.user_type);
+    },
 };
 </script>
 
