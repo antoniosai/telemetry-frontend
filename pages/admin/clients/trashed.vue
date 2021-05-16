@@ -146,8 +146,8 @@
                                 >
                                     <i class="fa fa-cog"></i>
                                 </NuxtLink>
-                                <button class="btn btn-sm btn-danger">
-                                    <i class="fa fa-trash"></i>
+                                <button class="btn btn-sm btn-success" @click="restore(props.row)">
+                                    <i class="fa fa-sync"></i>
                                 </button>
                             </span>
                         </template>
@@ -315,6 +315,38 @@ export default {
                 this.table.serverParams,
                 newProps
             );
+        },
+
+        restore: function (client) {
+            this.$swal({
+                title: "You Are Going To Restore " + client.name,
+                text: "Continue?",
+                showDenyButton: true,
+                denyButtonText: `Cancel`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: false,
+            }).then((value) => {
+                if (value.isConfirmed) {
+                    this.$axios
+                        .put(
+                            "/admin_area/clients/" +
+                                parseInt(client.id) +
+                                "/restore"
+                        )
+                        .then((res) => {
+                            if (res.data.status == 1) {
+                                this.initData();
+                                this.$swal({
+                                    title: res.data.message,
+                                    text: "Successfuly Restored " + client.name,
+                                    icon: "success",
+                                    buttons: true,
+                                });
+                            }
+                        });
+                }
+            });
         },
     },
 };

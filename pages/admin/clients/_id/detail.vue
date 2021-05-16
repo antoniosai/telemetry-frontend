@@ -1,6 +1,18 @@
 <template>
     <div>
-        <PageHeader :title="'Showing Data of ' + client.name" :breadcrumb_arr="breadcrumb_arr" />
+        <PageHeader :title="'Showing Data of ' + client.name" :breadcrumb_arr="breadcrumb_arr">
+            <template v-slot:button>
+                <div v-if="client.deleted_at">
+                    Deleted At {{ $moment(client.deleted_at).format('lll') }}
+                    <button
+                        @click="restore"
+                        class="btn btn-success ml-3"
+                    >
+                        <i class="fa fa-upload"></i> Restore
+                    </button>
+                </div>
+            </template>
+        </PageHeader>
 
         <div class="row">
             <div class="col-lg-12">
@@ -107,6 +119,44 @@ export default {
                         this.client = res.data.data;
                     }
                 });
+        },
+
+        restore: function () {
+            this.$swal({
+                title: "You Are Going To Restore " + this.client.name,
+                text: "Continue?",
+                showDenyButton: true,
+                denyButtonText: `Cancel`,
+                icon: "warning",
+                buttons: true,
+                dangerMode: false,
+            }).then((value) => {
+                if (value.isConfirmed) {
+                    this.$axios
+                        .put(
+                            "/admin_area/clients/" +
+                                parseInt(this.client.id) +
+                                "/restore"
+                        )
+                        .then((res) => {
+                            if (res.data.status == 1) {
+                                this.$swal({
+                                    title: res.data.message,
+                                    text:
+                                        "Successfuly Restored " +
+                                        this.client.name,
+                                    icon: "success",
+                                    buttons: true,
+                                }).then((val) => {
+                                    this.initData();
+                                    if (val.isConfirmed) {
+                                        window.location = "/admin/clients";
+                                    }
+                                });
+                            }
+                        });
+                }
+            });
         },
     },
 };

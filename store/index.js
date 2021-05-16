@@ -60,7 +60,6 @@ export const actions = {
 
                     resolve(res)
 
-                    // this.$router.push('module1.abmp_report')
                 } else {
                     resolve(res)
                 }
