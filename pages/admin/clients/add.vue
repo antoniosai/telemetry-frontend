@@ -370,13 +370,11 @@ export default {
 
     methods: {
         getProvinces: function () {
-            this.$axios
-                .get("https://kcd.e-belajar.id/api/area/province")
-                .then((res) => {
-                    if (res.data.status == 1) {
-                        this.area.provinces = res.data.data;
-                    }
-                });
+            this.$axios.get("/area/provinces").then((res) => {
+                if (res.data.status == 1) {
+                    this.area.provinces = res.data.data;
+                }
+            });
         },
 
         saveData: function () {
@@ -446,10 +444,7 @@ export default {
             this.area.districts = [];
 
             this.$axios
-                .get(
-                    "https://kcd.e-belajar.id/api/area/province/" +
-                        this.form.province.id
-                )
+                .get("/area/province/" + this.form.province.id)
                 .then((res) => {
                     if (res.data.status == 1) {
                         this.area.regencies = res.data.data.regency;
@@ -466,10 +461,7 @@ export default {
             this.area.districts = [];
 
             this.$axios
-                .get(
-                    "https://kcd.e-belajar.id/api/area/regency/" +
-                        this.form.regency.id
-                )
+                .get("/area/regency/" + this.form.regency.id)
                 .then((res) => {
                     if (res.data.status == 1) {
                         this.area.districts = res.data.data.district;
