@@ -462,13 +462,14 @@ export default {
                         .then((res) => {
                             if (res.data.status == 1) {
                                 this.$swal({
+                                    title: res.data.message,
+                                    text:
+                                        "Successfuly Updated " +
+                                        this.client.name,
                                     icon: "success",
-                                    title: "Your work has been saved",
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    showCloseButton: true,
+                                    buttons: true,
                                 }).then((val) => {
-                                    if (val) {
+                                    if (val.isConfirmed) {
                                         window.location = "/admin/clients";
                                     }
                                 });
@@ -506,13 +507,11 @@ export default {
         },
 
         getProvinces: function () {
-            this.$axios
-                .get("https://kcd.e-belajar.id/api/area/province")
-                .then((res) => {
-                    if (res.data.status == 1) {
-                        this.area.provinces = res.data.data;
-                    }
-                });
+            this.$axios.get("/area/provinces").then((res) => {
+                if (res.data.status == 1) {
+                    this.area.provinces = res.data.data;
+                }
+            });
         },
 
         selectProvince: function () {
@@ -526,10 +525,7 @@ export default {
 
             if (this.client.province) {
                 this.$axios
-                    .get(
-                        "https://kcd.e-belajar.id/api/area/province/" +
-                            this.client.province.id
-                    )
+                    .get("/area/province/" + this.client.province.id)
                     .then((res) => {
                         if (res.data.status == 1) {
                             this.area.regencies = res.data.data.regency;
@@ -541,10 +537,7 @@ export default {
         selectRegency: function () {
             if (this.client.regency) {
                 this.$axios
-                    .get(
-                        "https://kcd.e-belajar.id/api/area/regency/" +
-                            this.client.regency.id
-                    )
+                    .get("/area/regency/" + this.client.regency.id)
                     .then((res) => {
                         if (res.data.status == 1) {
                             this.area.districts = res.data.data.district;
