@@ -320,11 +320,11 @@
                                 <button
                                     v-if="edit_area == false"
                                     class="btn btn-primary"
-                                    v-on:click="editArea"
+                                    @click="editArea"
                                 >
                                     <i class="fa fa-cog"></i> Edit Address Detail
                                 </button>
-                                <button v-else class="btn btn-primary" v-on:click="editArea">
+                                <button v-else class="btn btn-primary" @click="editArea">
                                     <i class="fa fa-save"></i> Finish Editing Detail
                                 </button>
                             </div>
@@ -347,13 +347,13 @@
                     </ul>
                 </div>
 
-                <button class="btn btn-block btn-info" v-on:click="generateRandomPassword">
+                <button class="btn btn-block btn-info" @click="generateRandomPassword">
                     <i class="fa fa-key"></i> Generate Random Password
                 </button>
                 <button class="btn btn-block btn-warning">
                     <i class="fa fa-redo-alt"></i> Reset Form
                 </button>
-                <button v-on:click="saveData" class="btn btn-block btn-success">
+                <button @click="saveData" class="btn btn-block btn-success">
                     <i class="fa fa-plus"></i> Save Data
                 </button>
             </div>

@@ -253,11 +253,7 @@
                                     screen
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a
-                                    class="dropdown-item"
-                                    v-on:click="doLogout"
-                                    style="cursor: pointer"
-                                >
+                                <a class="dropdown-item" @click="doLogout" style="cursor: pointer">
                                     <i class="mdi mdi-logout m-r-5 text-muted"></i> Logout
                                 </a>
                             </div>

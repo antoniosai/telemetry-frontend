@@ -6,7 +6,7 @@
             :breadcrumb_arr="breadcrumb_arr"
         >
             <template v-slot:button>
-                <button v-on:click="triggerFilter" class="btn btn-secondary">
+                <button @click="triggerFilter" class="btn btn-secondary">
                     <i class="fa fa-filter"></i>
                     {{ open_filter ? 'Close Filter' : 'Open Filter' }}
                 </button>
@@ -187,8 +187,8 @@
                                     <div class="form-group col-md-12">
                                         <input
                                             v-model="filters.searchTerm"
-                                            v-on:keyup.enter="submitFilter"
-                                            v-on:change="searchTerm"
+                                            @keyup.enter="submitFilter"
+                                            @change="searchTerm"
                                             type="text"
                                             class="form-control"
                                             id="inputname1"
@@ -259,16 +259,10 @@
                                 <div class="col-auto p-0">
                                     <div class="clearfix">
                                         <div class="pull-right">
-                                            <button
-                                                v-on:click="resetFilter"
-                                                class="btn btn-warning"
-                                            >
+                                            <button @click="resetFilter" class="btn btn-warning">
                                                 <i class="fa fa-redo-alt"></i> Reset
                                             </button>
-                                            <button
-                                                v-on:click="submitFilter"
-                                                class="btn btn-primary"
-                                            >
+                                            <button @click="submitFilter" class="btn btn-primary">
                                                 <i class="fa fa-check"></i> Submit Filters
                                             </button>
                                         </div>

@@ -1,19 +1,6 @@
 <template>
     <div>
-        <PageHeader
-            title="Client Management"
-            :sub_title="'Showing 0 from 0 client(s)'"
-            :breadcrumb_arr="breadcrumb_arr"
-        >
-            <template v-slot:button>
-                <NuxtLink to="/admin/clients/trashed" class="btn btn-danger">
-                    <i class="fa fa-trash"></i> Trashed Client
-                </NuxtLink>
-                <NuxtLink to="/admin/clients/add" class="btn btn-primary">
-                    <i class="fa fa-plus"></i> Add New Client
-                </NuxtLink>
-            </template>
-        </PageHeader>
+        <PageHeader title="Trashed Clients" :breadcrumb_arr="breadcrumb_arr"></PageHeader>
 
         <div class="row">
             <div class="col-md-12">
@@ -78,7 +65,7 @@
                             <span v-if="props.column.field == 'created_at'">
                                 {{
                                 $moment(props.row.created_at).format(
-                                "lll"
+                                "D MMMM yyyy"
                                 )
                                 }}
                             </span>
@@ -159,10 +146,7 @@
                                 >
                                     <i class="fa fa-cog"></i>
                                 </NuxtLink>
-                                <button
-                                    class="btn btn-sm btn-danger"
-                                    @click="deleteClient(props.row)"
-                                >
+                                <button class="btn btn-sm btn-danger">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </span>
@@ -194,6 +178,10 @@ export default {
                 {
                     title: "Client Management",
                     dest: "/admin/clients",
+                },
+                {
+                    title: "Trashed Client",
+                    dest: "/admin/clients/trashed",
                 },
             ];
         },
@@ -255,10 +243,12 @@ export default {
         initData: function () {
             let params = this.table.serverParams;
 
-            this.$axios.get("/admin_area/clients", { params }).then((res) => {
-                this.table.rows = res.data.data;
-                this.table.totalRows = res.data.total;
-            });
+            this.$axios
+                .get("/admin_area/clients/get/trashed", { params })
+                .then((res) => {
+                    this.table.rows = res.data.data;
+                    this.table.totalRows = res.data.total;
+                });
         },
         selectionChanged(params) {
             this.table.selectedRows = [];
@@ -325,55 +315,6 @@ export default {
                 this.table.serverParams,
                 newProps
             );
-        },
-
-        deleteClient: function (client) {
-            this.$swal({
-                title: "You Are Going To Delete " + client.name,
-                text: "Continue?",
-                showDenyButton: true,
-                denyButtonText: `Cancel`,
-                icon: "warning",
-                buttons: true,
-                dangerMode: false,
-            }).then((value) => {
-                if (value.isConfirmed) {
-                    this.$axios
-                        .delete("/admin_area/clients/" + client.id, this.client)
-                        .then((res) => {
-                            if (res.data.status == 1) {
-                                this.$swal({
-                                    icon: "success",
-                                    title: res.data.message,
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    showCloseButton: true,
-                                });
-                                this.initData();
-                            } else if (res.data.status == 0) {
-                                this.$swal({
-                                    icon: "error",
-                                    title: res.data.message,
-                                    showConfirmButton: false,
-                                    timer: 1500,
-                                    showCloseButton: true,
-                                });
-                            }
-                        })
-                        .catch((error) => {
-                            if (error.response) {
-                                this.$swal({
-                                    icon: "error",
-                                    title: "Oops...",
-                                    text: "Something went wrong!",
-                                    footer:
-                                        "<a href>Why do I have this issue?</a>",
-                                });
-                                return false;
-                            }
-                        });
-                }
-            });
         },
     },
 };

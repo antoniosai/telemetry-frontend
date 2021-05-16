@@ -141,7 +141,7 @@
                 <button class="btn btn-block btn-warning">
                     <i class="fa fa-redo-alt"></i> Reset Form
                 </button>
-                <button v-on:click="saveData" class="btn btn-block btn-success">
+                <button @click="saveData" class="btn btn-block btn-success">
                     <i class="fa fa-plus"></i> Save Data
                 </button>
             </div>
