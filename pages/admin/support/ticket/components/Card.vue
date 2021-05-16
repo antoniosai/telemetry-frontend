@@ -35,7 +35,9 @@
                     <center>
                         <span>Client Name</span>
                         <p class="mb-0" style="font-size: 20px">
-                            <strong>Antonio Saiful Islam</strong>
+                            <NuxtLink class="style-none" to="/admin/support/ticket">
+                                <strong>Antonio Saiful Islam</strong>
+                            </NuxtLink>
                         </p>
                     </center>
                 </div>
@@ -88,5 +90,9 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
+.style-none {
+    text-decoration: none;
+    color: white;
+}
 </style>
